@@ -1,21 +1,31 @@
 import UIKit
 
+protocol IMainScreenCellOutput {
+    func leftImageTapped(_ imageUrls:[URL])
+    func rightImageTapped(_ imageUrls:[URL])
+}
+
+protocol IMainScreenCellView: AnyObject {
+    func configLeftSide(_ image: UIImage?, _ tags: String?)
+    func configRightSide(_ image: UIImage?, _ tags: String?)
+    func clearLeftSide()
+    func clearRightSide()
+}
+
 final class MainScreenCell: UITableViewCell {
     
+    var presenter: IMainScreenCellPresenter?
+
     enum Constants {
         static let spaceBetween: CGFloat = 10
     }
 
     static let reuseIdentifier = String(describing: MainScreenCell.self)
 
-    var leftLoadTask: Cancelable?
-    var rightLoadTask: Cancelable?
-
     // UI elements
     private lazy var horizontalStackView = makeStackView()
     private let leftImageTagsView = ImageTagsView()
     private let rightImageTagsView = ImageTagsView()
-    private var execution: ((UIImage?, UIImage?, Int)->Void)?
 
     // MARK: - Init
 
@@ -23,55 +33,21 @@ final class MainScreenCell: UITableViewCell {
         super.init(style: style, reuseIdentifier: reuseIdentifier)
 
         setupUI()
+        setupGesture()
     }
 
     required init?(coder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configLeftSide(_ image: UIImage?, _ tags: String) {
-        leftImageTagsView.hideSkeleton()
-        leftImageTagsView.configure(image, tags)
-    }
-
-    func configRightSide(_ image: UIImage?, _ tags: String) {
-        rightImageTagsView.hideSkeleton()
-        rightImageTagsView.configure(image, tags)
-    }
-
-    func showSkeletonForSubviews() {
-        leftImageTagsView.showSkeleton()
-        rightImageTagsView.showSkeleton()
-    }
-
-    func config(_ execution: @escaping (UIImage?, UIImage?, Int)->Void) {
-        self.execution = execution
-
-        let leftTapGesture = UITapGestureRecognizer()
-        leftTapGesture.addTarget(self, action: #selector(leftTapAction))
-        leftImageTagsView.isUserInteractionEnabled = true
-        leftImageTagsView.addGestureRecognizer(leftTapGesture)
-
-        let rightTapGesture = UITapGestureRecognizer()
-        rightTapGesture.addTarget(self, action: #selector(rightTapAction))
-        rightImageTagsView.isUserInteractionEnabled = true
-        rightImageTagsView.addGestureRecognizer(rightTapGesture)
-    }
-
     @objc
     private func leftTapAction() {
-        execution?(leftImageTagsView.image, rightImageTagsView.image, 0)
+        presenter?.leftImageTapped()
     }
 
     @objc
     private func rightTapAction() {
-        execution?(leftImageTagsView.image, rightImageTagsView.image, 1)
-    }
-
-    override func prepareForReuse() {
-        super.prepareForReuse()
-
-        clear()
+        presenter?.rightImageTapped()
     }
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -91,6 +67,24 @@ final class MainScreenCell: UITableViewCell {
     }
 }
 
+extension MainScreenCell: IMainScreenCellView {
+
+    func configLeftSide(_ image: UIImage?, _ tags: String?) {
+        leftImageTagsView.configure(image, tags)
+    }
+
+    func configRightSide(_ image: UIImage?, _ tags: String?) {
+        rightImageTagsView.configure(image, tags)
+    }
+
+    func clearLeftSide() {
+        configLeftSide(nil, nil)
+    }
+    func clearRightSide() {
+        configRightSide(nil, nil)
+    }
+}
+
 // MARK: - Private
 
 private extension MainScreenCell {
@@ -104,13 +98,16 @@ private extension MainScreenCell {
         selectionStyle = .none
     }
 
-    private func clear() {
-        leftLoadTask?.cancel()
-        rightLoadTask?.cancel()
-        leftLoadTask = nil
-        rightLoadTask = nil
-        leftImageTagsView.configure(nil, .empty)
-        rightImageTagsView.configure(nil, .empty)
+    func setupGesture() {
+        let leftTapGesture = UITapGestureRecognizer()
+        leftTapGesture.addTarget(self, action: #selector(leftTapAction))
+        leftImageTagsView.isUserInteractionEnabled = true
+        leftImageTagsView.addGestureRecognizer(leftTapGesture)
+
+        let rightTapGesture = UITapGestureRecognizer()
+        rightTapGesture.addTarget(self, action: #selector(rightTapAction))
+        rightImageTagsView.isUserInteractionEnabled = true
+        rightImageTagsView.addGestureRecognizer(rightTapGesture)
     }
 }
 

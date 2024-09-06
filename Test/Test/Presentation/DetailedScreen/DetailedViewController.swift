@@ -1,7 +1,8 @@
 import UIKit
 
 protocol IDetailedView: AnyObject {
-    func update(_ leftImage: UIImage?, _ rightImage: UIImage?)
+    func update(leftImage: UIImage?)
+    func update(rightImage: UIImage?)
     func update(_ startIndex: Int)
 }
 
@@ -131,8 +132,10 @@ private extension DetailedViewController {
 
 extension DetailedViewController: IDetailedView {
     
-    func update(_ leftImage: UIImage?, _ rightImage: UIImage?) {
+    func update(leftImage: UIImage?) {
         leftImageView.image = leftImage
+    }
+    func update(rightImage: UIImage?) {
         rightImageView.image = rightImage
     }
 

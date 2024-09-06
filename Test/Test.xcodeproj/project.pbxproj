@@ -24,6 +24,7 @@
 		262469C32C84B02800B7D580 /* UIView+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262469C22C84B02800B7D580 /* UIView+Extension.swift */; };
 		262469C52C84B28D00B7D580 /* ImageTagsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262469C42C84B28D00B7D580 /* ImageTagsView.swift */; };
 		262469C72C862B9200B7D580 /* ServiceLocator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262469C62C862B9200B7D580 /* ServiceLocator.swift */; };
+		264EF8E72C8B005400351ACA /* MainScreenCellPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 264EF8E62C8B005400351ACA /* MainScreenCellPresenter.swift */; };
 		266BF9C82C8891580073AE94 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266BF9C72C8891580073AE94 /* UIImage+Extensions.swift */; };
 		266BF9CA2C88C2C90073AE94 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266BF9C92C88C2C90073AE94 /* Array+Extensions.swift */; };
 		266BF9CD2C88DEA50073AE94 /* DetailedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 266BF9CC2C88DEA50073AE94 /* DetailedViewController.swift */; };
@@ -58,6 +59,7 @@
 		262469C22C84B02800B7D580 /* UIView+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Extension.swift"; sourceTree = "<group>"; };
 		262469C42C84B28D00B7D580 /* ImageTagsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ImageTagsView.swift; sourceTree = "<group>"; };
 		262469C62C862B9200B7D580 /* ServiceLocator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ServiceLocator.swift; sourceTree = "<group>"; };
+		264EF8E62C8B005400351ACA /* MainScreenCellPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenCellPresenter.swift; sourceTree = "<group>"; };
 		266BF9C72C8891580073AE94 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		266BF9C92C88C2C90073AE94 /* Array+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		266BF9CC2C88DEA50073AE94 /* DetailedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DetailedViewController.swift; sourceTree = "<group>"; };
@@ -117,10 +119,11 @@
 		262469A42C8363F900B7D580 /* MainScreen */ = {
 			isa = PBXGroup;
 			children = (
+				264EF8E52C8B002700351ACA /* Cell */,
 				262469B92C8393C800B7D580 /* Models */,
 				262469B62C83714900B7D580 /* Requests */,
-				262469AD2C8365F900B7D580 /* Views */,
 				262469A92C83652F00B7D580 /* MainScreenAssembly.swift */,
+				262469942C83635B00B7D580 /* MainViewController.swift */,
 				262469AB2C83658C00B7D580 /* MainScreenPresenter.swift */,
 				26E2EB762C8757800093DB51 /* MainScreenService.swift */,
 				266BF9D22C88E4D40073AE94 /* MainScreenRouter.swift */,
@@ -135,16 +138,6 @@
 				262469C62C862B9200B7D580 /* ServiceLocator.swift */,
 			);
 			path = Services;
-			sourceTree = "<group>";
-		};
-		262469AD2C8365F900B7D580 /* Views */ = {
-			isa = PBXGroup;
-			children = (
-				262469942C83635B00B7D580 /* MainViewController.swift */,
-				262469AE2C83660800B7D580 /* MainScreenCell.swift */,
-				262469C42C84B28D00B7D580 /* ImageTagsView.swift */,
-			);
-			path = Views;
 			sourceTree = "<group>";
 		};
 		262469B02C83673300B7D580 /* Helpers */ = {
@@ -195,6 +188,16 @@
 				266BF9CB2C88DE910073AE94 /* DetailedScreen */,
 			);
 			path = Presentation;
+			sourceTree = "<group>";
+		};
+		264EF8E52C8B002700351ACA /* Cell */ = {
+			isa = PBXGroup;
+			children = (
+				262469AE2C83660800B7D580 /* MainScreenCell.swift */,
+				262469C42C84B28D00B7D580 /* ImageTagsView.swift */,
+				264EF8E62C8B005400351ACA /* MainScreenCellPresenter.swift */,
+			);
+			path = Cell;
 			sourceTree = "<group>";
 		};
 		266BF9CB2C88DE910073AE94 /* DetailedScreen */ = {
@@ -287,6 +290,7 @@
 				262469B52C836A3C00B7D580 /* URLSession+Protocol.swift in Sources */,
 				266BF9D32C88E4D40073AE94 /* MainScreenRouter.swift in Sources */,
 				26E2EB792C877B180093DB51 /* MainCellConfig.swift in Sources */,
+				264EF8E72C8B005400351ACA /* MainScreenCellPresenter.swift in Sources */,
 				266BF9D52C88E53D0073AE94 /* DetailedScreenConfig.swift in Sources */,
 				266BF9D72C88E7AF0073AE94 /* String+Extensions.swift in Sources */,
 				262469B32C83687F00B7D580 /* UIView+Skeleton.swift in Sources */,

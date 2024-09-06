@@ -1,9 +1,6 @@
 import UIKit
 
 struct DetailedScreenConfiguration {
-    let leftSmallImage: UIImage?
-    let rightSmallImage: UIImage?
-    let leftLargeImageURL: URL?
-    let rightLargeImageURL: URL?
+    let imageUrls: [URL]
     let startIndex: Int
 }

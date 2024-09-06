@@ -51,43 +51,51 @@ extension MainScreenPresenter: IMainScreenPresenter {
         cell: MainScreenCell,
         withConfig config: MainCellConfig
     ) {
-        DispatchQueue.main.async {
-            cell.showSkeletonForSubviews()
-        }
+        let cellPresenter = MainScreenCellPresenter(
+            output: self,
+            leftHit: config.leftHit,
+            rightHit: config.rightHit
+        )
 
         if let leftHit = config.leftHit {
-            cell.leftLoadTask = service.loadImage(forHit: leftHit) { [weak cell] image in
-                DispatchQueue.main.async {
-                    cell?.configLeftSide(image, leftHit.tags)
-                }
+            cellPresenter.leftTask = service.loadImage(forHit: leftHit) { [weak cellPresenter] image in
+                cellPresenter?.leftImageLoaded(image)
             }
         } else {
             DispatchQueue.main.async {
-                cell.configLeftSide(nil, .empty)
+                cellPresenter.view?.clearLeftSide()
             }
         }
         if let rightHit = config.rightHit {
-            cell.rightLoadTask = service.loadImage(forHit: rightHit) { [weak cell] image in
-                DispatchQueue.main.async {
-                    cell?.configRightSide(image, rightHit.tags)
-                }
+            cellPresenter.rightTask = service.loadImage(forHit: rightHit) { [weak cellPresenter] image in
+                cellPresenter?.rightImageLoaded(image)
             }
         } else {
             DispatchQueue.main.async {
-                cell.configRightSide(nil, .empty)
+                cellPresenter.view?.clearRightSide()
             }
         }
 
-        cell.config { [weak self] leftImage, rightImage, startIndex in
-            let config = DetailedScreenConfiguration(
-                leftSmallImage: leftImage,
-                rightSmallImage: rightImage,
-                leftLargeImageURL: nil,
-                rightLargeImageURL: nil,
-                startIndex: startIndex
-            )
-            self?.router.showDetailedScreen(withConfig: config)
-        }
+        cell.presenter = cellPresenter
+        cellPresenter.view = cell
     }
 }
 
+extension MainScreenPresenter: IMainScreenCellOutput {
+
+    func leftImageTapped(_ imageUrls:[URL]) {
+        let config = DetailedScreenConfiguration(
+            imageUrls: imageUrls,
+            startIndex: 0
+        )
+        router.showDetailedScreen(withConfig: config)
+    }
+    
+    func rightImageTapped(_ imageUrls:[URL]) {
+        let config = DetailedScreenConfiguration(
+            imageUrls: imageUrls,
+            startIndex: 1
+        )
+        router.showDetailedScreen(withConfig: config)
+    }
+}

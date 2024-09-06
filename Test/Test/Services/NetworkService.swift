@@ -24,6 +24,7 @@ protocol INetworkService {
 final class NetworkService {
 
     private let urlSession: IURLSession
+    private let cache = NSCache<NSString, UIImage>()
 
     // MARK: - Init
 
@@ -73,6 +74,11 @@ extension NetworkService: INetworkService {
         var urlRequest = URLRequest(url: imageUrl, cachePolicy: .returnCacheDataElseLoad)
         urlRequest.httpMethod = "GET"
 
+        if let image = imageIfCached(imageUrl.absoluteString) {
+            completion(.success(image))
+            return nil
+        }
+
         let task = urlSession.downloadTask(with: urlRequest) { localUrl, response, error in
             if let error {
                 completion(.failure(.error(error)))
@@ -82,6 +88,7 @@ extension NetworkService: INetworkService {
               let localUrl,
               let data = try? Data(contentsOf: localUrl),
               let image = UIImage(data: data) {
+                self.cache.setObject(image, forKey: imageUrl.absoluteString as NSString)
                 completion(.success(image))
             } else {
                 completion(.failure(.decode))
@@ -104,5 +111,9 @@ private extension NetworkService {
         let urlString = "\(request.scheme)://\(request.host)/\(request.apiVersion)/?\(getParams)"
 
         return URL(string: urlString)
+    }
+
+    private func imageIfCached(_ urlString: String) -> UIImage? {
+        cache.object(forKey: urlString as NSString)
     }
 }

@@ -22,14 +22,16 @@ final class ImageTagsView: UIView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    func configure(_ image: UIImage?, _ tags: String) {
+    func configure(_ image: UIImage?, _ tags: String?, animation: Bool = false) {
         self.image = image
         imageView.image = image?.withRoundedCorners(radius: Constants.cornerRadius)
         tagsView.text = tags
-
-        alpha = 0
-        UIView.animate(withDuration: 1) {
-            self.alpha = 1
+        
+        if animation {
+            imageView.alpha = 0
+            UIView.animate(withDuration: 1) {
+                self.imageView.alpha = 1
+            }
         }
     }
 

@@ -8,12 +8,27 @@ protocol IDetailedScreenPresenter {
 final class DetailedScreenPresenter {
     // Dependencies
     weak var view: IDetailedView?
-    private var configuration: DetailedScreenConfiguration
+    private let configuration: DetailedScreenConfiguration
+    private let network: INetworkService
 
     // MARK: - Init
 
-    init(_ configuration: DetailedScreenConfiguration) {
+    init(configuration: DetailedScreenConfiguration, network: INetworkService) {
         self.configuration = configuration
+        self.network = network
+    }
+
+    // MARK: Private
+    private func updateImageDependOn(index: Int, image: UIImage) {
+        DispatchQueue.main.async {
+            switch index {
+            case 0:
+                self.view?.update(leftImage: image)
+            case 1:
+                self.view?.update(rightImage: image)
+            default: break
+            }
+        }
     }
 }
 
@@ -22,7 +37,16 @@ final class DetailedScreenPresenter {
 extension DetailedScreenPresenter: IDetailedScreenPresenter {
 
     func onViewWillAppear() {
-        view?.update(configuration.leftSmallImage, configuration.rightSmallImage)
+        for (index, url) in configuration.imageUrls.enumerated() {
+            network.loadImage(url) { [weak self] result in
+                switch result {
+                case .success(let image):
+                    self?.updateImageDependOn(index: index, image: image)
+                case .failure(let failure):
+                    break
+                }
+            }
+        }
     }
 
     func onViewDidLayoutSubviews() {
