@@ -119,13 +119,19 @@ private extension MainScreenViewController {
     }
 
     private func showSkeletons() {
+        configs = [MainCellConfig](repeating: MainCellConfig(isSkeleton: true), count: 10)
 
+        tableView.reloadData()
+        tableView.isHidden = false
+        tableView.isUserInteractionEnabled = false
     }
 
     private func showData(_ data: [MainCellConfig]) {
         configs = data
-        tableView.isHidden = false
+
         tableView.reloadData()
+        tableView.isHidden = false
+        tableView.isUserInteractionEnabled = true
     }
 
     private func showError(_ error: MainScreenError) {
@@ -134,9 +140,7 @@ private extension MainScreenViewController {
     }
 }
 
-extension MainScreenViewController: UITableViewDelegate {
-
-}
+extension MainScreenViewController: UITableViewDelegate { }
 
 extension MainScreenViewController: UITableViewDataSource {
 

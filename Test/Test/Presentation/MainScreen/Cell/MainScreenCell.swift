@@ -40,14 +40,14 @@ final class MainScreenCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 
-    @objc
-    private func leftTapAction() {
-        presenter?.leftImageTapped()
+    func showSkeletons() {
+        leftImageTagsView.showSkeletons()
+        rightImageTagsView.showSkeletons()
     }
 
-    @objc
-    private func rightTapAction() {
-        presenter?.rightImageTapped()
+    func hideSkeletons() {
+        leftImageTagsView.hideSkeletons()
+        rightImageTagsView.hideSkeletons()
     }
 
     override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
@@ -108,6 +108,16 @@ private extension MainScreenCell {
         rightTapGesture.addTarget(self, action: #selector(rightTapAction))
         rightImageTagsView.isUserInteractionEnabled = true
         rightImageTagsView.addGestureRecognizer(rightTapGesture)
+    }
+
+    @objc
+    private func leftTapAction() {
+        presenter?.leftImageTapped()
+    }
+
+    @objc
+    private func rightTapAction() {
+        presenter?.rightImageTapped()
     }
 }
 

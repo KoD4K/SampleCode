@@ -6,6 +6,7 @@ final class ImageTagsView: UIView {
         static let spaceBetween: CGFloat = 10
         static let cornerRadius: CGFloat = 20
         static let imageHeight: CGFloat = 120
+        static let tagsHeight: CGFloat = 20
     }
 
     private lazy var imageView = makeImageView()
@@ -35,6 +36,18 @@ final class ImageTagsView: UIView {
         }
     }
 
+    func showSkeletons() {
+        imageView.showSkeleton()
+        tagsView.showSkeleton()
+    }
+
+    func hideSkeletons() {
+        imageView.hideSkeleton()
+        tagsView.hideSkeleton()
+    }
+
+    // MARK: Private
+
     private func setupUI() {
         addSubview(imageView)
         addSubview(tagsView)
@@ -50,6 +63,7 @@ final class ImageTagsView: UIView {
             equalTo: imageView.bottomAnchor,
             constant: Constants.spaceBetween
         ).isActive = true
+        tagsView.heightAnchor.constraint(greaterThanOrEqualToConstant: Constants.tagsHeight).isActive = true
     }
 }
 

@@ -35,6 +35,10 @@ final class MainScreenPresenter {
 extension MainScreenPresenter: IMainScreenPresenter {
 
     func onTextFieldDidChange(with text: String) {
+        DispatchQueue.main.async {
+            self.view?.update(withState: .loading)
+        }
+
         service.loadHits(forText: text) { [weak self] result in
             DispatchQueue.main.async {
                 switch result {
@@ -51,11 +55,23 @@ extension MainScreenPresenter: IMainScreenPresenter {
         cell: MainScreenCell,
         withConfig config: MainCellConfig
     ) {
+        guard !config.isSkeleton else {
+            DispatchQueue.main.async {
+                cell.showSkeletons()
+            }
+            return
+        }
+
+        cell.hideSkeletons()
+
         let cellPresenter = MainScreenCellPresenter(
             output: self,
             leftHit: config.leftHit,
             rightHit: config.rightHit
         )
+
+        cell.presenter = cellPresenter
+        cellPresenter.view = cell
 
         if let leftHit = config.leftHit {
             cellPresenter.leftTask = service.loadImage(forHit: leftHit) { [weak cellPresenter] image in
@@ -63,7 +79,7 @@ extension MainScreenPresenter: IMainScreenPresenter {
             }
         } else {
             DispatchQueue.main.async {
-                cellPresenter.view?.clearLeftSide()
+                cell.clearLeftSide()
             }
         }
         if let rightHit = config.rightHit {
@@ -72,12 +88,9 @@ extension MainScreenPresenter: IMainScreenPresenter {
             }
         } else {
             DispatchQueue.main.async {
-                cellPresenter.view?.clearRightSide()
+                cell.clearRightSide()
             }
         }
-
-        cell.presenter = cellPresenter
-        cellPresenter.view = cell
     }
 }
 
