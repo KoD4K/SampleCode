@@ -13,7 +13,7 @@ protocol ModelRequest: IRequest {
 
 class BaseRequest: IRequest {
 
-    static let key = ""
+    static let key = "38738026-cb365c92113f40af7a864c24a"
 
     private let searchString: String
     private let pageNumber: Int

@@ -21,6 +21,7 @@ final class MainScreenService {
     // Properties
     private var baseCancelable: Cancelable?
     private var graffitiCancelable: Cancelable?
+    private var cache = NSCache<NSString, UIImage>()
 
     // MARK: - Init
 

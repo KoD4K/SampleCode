@@ -1,7 +1,8 @@
 import UIKit
 
 protocol IMainScreenView: AnyObject {
-    /// Update view with new data
+    /// Update view with a new state
+    /// - Parameter state: updated state
     func update(withState state: MainScreenViewController.State)
 }
 
