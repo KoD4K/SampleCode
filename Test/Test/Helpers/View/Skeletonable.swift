@@ -1,8 +1,11 @@
 import UIKit
 
-extension UIView {
+protocol Skeletonable {
+    func showSkeleton()
+    func hideSkeleton()
+}
 
-    private static let shimmerAnimationKey = "shimmerAnimation"
+extension Skeletonable where Self: UIView {
 
     var skeletonLayerName: String { "skeletonLayerName" }
     var skeletonGradientName: String { "skeletonGradientName" }
@@ -50,3 +53,5 @@ extension UIView {
     }
 }
 
+extension UIImageView: Skeletonable { }
+extension UILabel: Skeletonable { }

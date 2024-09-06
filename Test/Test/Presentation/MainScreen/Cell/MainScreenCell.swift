@@ -1,15 +1,12 @@
 import UIKit
 
 protocol IMainScreenCellOutput {
-    func leftImageTapped(_ imageUrls:[URL])
-    func rightImageTapped(_ imageUrls:[URL])
+    func imageTapped(index: Int, imageUrls:[URL])
 }
 
 protocol IMainScreenCellView: AnyObject {
-    func configLeftSide(_ image: UIImage?, _ tags: String?)
-    func configRightSide(_ image: UIImage?, _ tags: String?)
-    func clearLeftSide()
-    func clearRightSide()
+    func config(index: Int, image: UIImage?, text: String?)
+    func clear(index: Int)
 }
 
 final class MainScreenCell: UITableViewCell {
@@ -18,6 +15,7 @@ final class MainScreenCell: UITableViewCell {
 
     enum Constants {
         static let spaceBetween: CGFloat = 10
+        static let horizontalStackViewTop: CGFloat = 10
     }
 
     static let reuseIdentifier = String(describing: MainScreenCell.self)
@@ -69,19 +67,24 @@ final class MainScreenCell: UITableViewCell {
 
 extension MainScreenCell: IMainScreenCellView {
 
-    func configLeftSide(_ image: UIImage?, _ tags: String?) {
-        leftImageTagsView.configure(image, tags)
+    func config(index: Int, image: UIImage?, text: String?) {
+        switch index {
+        case 0:
+            leftImageTagsView.configure(image, text)
+        case 1:
+            rightImageTagsView.configure(image, text)
+        default: break
+        }
     }
 
-    func configRightSide(_ image: UIImage?, _ tags: String?) {
-        rightImageTagsView.configure(image, tags)
-    }
-
-    func clearLeftSide() {
-        configLeftSide(nil, nil)
-    }
-    func clearRightSide() {
-        configRightSide(nil, nil)
+    func clear(index: Int) {
+        switch index {
+        case 0:
+            leftImageTagsView.configure(nil, nil)
+        case 1:
+            rightImageTagsView.configure(nil, nil)
+        default: break
+        }
     }
 }
 
@@ -91,7 +94,7 @@ private extension MainScreenCell {
 
     func setupUI() {
         addSubview(horizontalStackView)
-        horizontalStackView.pinToSuperviewEdges(top: 10)
+        horizontalStackView.pinToSuperviewEdges(top: Constants.horizontalStackViewTop)
         horizontalStackView.addArrangedSubview(leftImageTagsView)
         horizontalStackView.addArrangedSubview(rightImageTagsView)
 
@@ -112,12 +115,12 @@ private extension MainScreenCell {
 
     @objc
     private func leftTapAction() {
-        presenter?.leftImageTapped()
+        presenter?.imageTapped(index: 0)
     }
 
     @objc
     private func rightTapAction() {
-        presenter?.rightImageTapped()
+        presenter?.imageTapped(index: 1)
     }
 }
 

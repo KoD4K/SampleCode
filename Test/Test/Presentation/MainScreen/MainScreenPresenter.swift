@@ -51,10 +51,7 @@ extension MainScreenPresenter: IMainScreenPresenter {
         }
     }
 
-    func willDisplay(
-        cell: MainScreenCell,
-        withConfig config: MainCellConfig
-    ) {
+    func willDisplay(cell: MainScreenCell, withConfig config: MainCellConfig) {
         guard !config.isSkeleton else {
             DispatchQueue.main.async {
                 cell.showSkeletons()
@@ -64,50 +61,31 @@ extension MainScreenPresenter: IMainScreenPresenter {
 
         cell.hideSkeletons()
 
-        let cellPresenter = MainScreenCellPresenter(
-            output: self,
-            leftHit: config.leftHit,
-            rightHit: config.rightHit
-        )
+        let cellPresenter = MainScreenCellPresenter(output: self, hits: config.hits)
 
         cell.presenter = cellPresenter
         cellPresenter.view = cell
 
-        if let leftHit = config.leftHit {
-            cellPresenter.leftTask = service.loadImage(forHit: leftHit) { [weak cellPresenter] image in
-                cellPresenter?.leftImageLoaded(image)
+        for (index, hit) in config.hits.enumerated() {
+            guard let hit else {
+                cell.clear(index: index)
+                return
             }
-        } else {
-            DispatchQueue.main.async {
-                cell.clearLeftSide()
+
+            let task = service.loadImage(forHit: hit) { [weak cellPresenter] image in
+                cellPresenter?.imageLoaded(index: index, image: image)
             }
-        }
-        if let rightHit = config.rightHit {
-            cellPresenter.rightTask = service.loadImage(forHit: rightHit) { [weak cellPresenter] image in
-                cellPresenter?.rightImageLoaded(image)
-            }
-        } else {
-            DispatchQueue.main.async {
-                cell.clearRightSide()
-            }
+            cellPresenter.addTask(task)
         }
     }
 }
 
 extension MainScreenPresenter: IMainScreenCellOutput {
 
-    func leftImageTapped(_ imageUrls:[URL]) {
+    func imageTapped(index: Int, imageUrls: [URL]) {
         let config = DetailedScreenConfiguration(
             imageUrls: imageUrls,
-            startIndex: 0
-        )
-        router.showDetailedScreen(withConfig: config)
-    }
-    
-    func rightImageTapped(_ imageUrls:[URL]) {
-        let config = DetailedScreenConfiguration(
-            imageUrls: imageUrls,
-            startIndex: 1
+            startIndex: index
         )
         router.showDetailedScreen(withConfig: config)
     }

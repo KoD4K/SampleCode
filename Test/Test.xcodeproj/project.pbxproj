@@ -16,7 +16,7 @@
 		262469AA2C83652F00B7D580 /* MainScreenAssembly.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262469A92C83652F00B7D580 /* MainScreenAssembly.swift */; };
 		262469AC2C83658C00B7D580 /* MainScreenPresenter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262469AB2C83658C00B7D580 /* MainScreenPresenter.swift */; };
 		262469AF2C83660800B7D580 /* MainScreenCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262469AE2C83660800B7D580 /* MainScreenCell.swift */; };
-		262469B32C83687F00B7D580 /* UIView+Skeleton.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262469B22C83687F00B7D580 /* UIView+Skeleton.swift */; };
+		262469B32C83687F00B7D580 /* Skeletonable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262469B22C83687F00B7D580 /* Skeletonable.swift */; };
 		262469B52C836A3C00B7D580 /* URLSession+Protocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262469B42C836A3C00B7D580 /* URLSession+Protocol.swift */; };
 		262469B82C838CC800B7D580 /* BaseRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262469B72C838CC800B7D580 /* BaseRequest.swift */; };
 		262469BB2C8393E400B7D580 /* BaseModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 262469BA2C8393E400B7D580 /* BaseModel.swift */; };
@@ -51,7 +51,7 @@
 		262469A92C83652F00B7D580 /* MainScreenAssembly.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenAssembly.swift; sourceTree = "<group>"; };
 		262469AB2C83658C00B7D580 /* MainScreenPresenter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenPresenter.swift; sourceTree = "<group>"; };
 		262469AE2C83660800B7D580 /* MainScreenCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainScreenCell.swift; sourceTree = "<group>"; };
-		262469B22C83687F00B7D580 /* UIView+Skeleton.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIView+Skeleton.swift"; sourceTree = "<group>"; };
+		262469B22C83687F00B7D580 /* Skeletonable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Skeletonable.swift; sourceTree = "<group>"; };
 		262469B42C836A3C00B7D580 /* URLSession+Protocol.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "URLSession+Protocol.swift"; sourceTree = "<group>"; };
 		262469B72C838CC800B7D580 /* BaseRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseRequest.swift; sourceTree = "<group>"; };
 		262469BA2C8393E400B7D580 /* BaseModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BaseModel.swift; sourceTree = "<group>"; };
@@ -155,7 +155,7 @@
 		262469B12C83673900B7D580 /* View */ = {
 			isa = PBXGroup;
 			children = (
-				262469B22C83687F00B7D580 /* UIView+Skeleton.swift */,
+				262469B22C83687F00B7D580 /* Skeletonable.swift */,
 				262469C22C84B02800B7D580 /* UIView+Extension.swift */,
 				266BF9C72C8891580073AE94 /* UIImage+Extensions.swift */,
 			);
@@ -293,7 +293,7 @@
 				264EF8E72C8B005400351ACA /* MainScreenCellPresenter.swift in Sources */,
 				266BF9D52C88E53D0073AE94 /* DetailedScreenConfig.swift in Sources */,
 				266BF9D72C88E7AF0073AE94 /* String+Extensions.swift in Sources */,
-				262469B32C83687F00B7D580 /* UIView+Skeleton.swift in Sources */,
+				262469B32C83687F00B7D580 /* Skeletonable.swift in Sources */,
 				26E2EB7B2C8785680093DB51 /* MainScreenError.swift in Sources */,
 				26E2EB732C8712680093DB51 /* URLSessionDataTask+Cancelable.swift in Sources */,
 				262469AF2C83660800B7D580 /* MainScreenCell.swift in Sources */,

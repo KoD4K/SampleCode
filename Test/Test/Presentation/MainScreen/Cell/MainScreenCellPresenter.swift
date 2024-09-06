@@ -1,73 +1,52 @@
 import UIKit
 
 protocol IMainScreenCellPresenter {
-    func leftImageTapped()
-    func rightImageTapped()
+    func imageTapped(index: Int)
 }
 
 final class MainScreenCellPresenter {
     
     // Properties
-    var leftTask: Cancelable?
-    var rightTask: Cancelable?
+    private var tasks: [Cancelable?] = []
 
     // Dependencies
     weak var view: IMainScreenCellView?
     private let output: IMainScreenCellOutput
-    private let leftHit: Hit?
-    private let rightHit: Hit?
+    private let hits: [Hit?]
 
-    init(output: IMainScreenCellOutput, leftHit: Hit?, rightHit: Hit?) {
+    init(output: IMainScreenCellOutput, hits: [Hit?]) {
         self.output = output
-        self.leftHit = leftHit
-        self.rightHit = rightHit
 
-        updateLeft()
-        updateRight()
+        self.hits = hits
+
+        DispatchQueue.main.async {
+            for (index, hit) in hits.enumerated() {
+                self.view?.config(index: index, image: nil, text: hit?.tags)
+            }
+        }
     }
 
     deinit {
-        leftTask?.cancel()
-        rightTask?.cancel()
+        tasks.compactMap { $0 }.forEach { $0.cancel() }
     }
 
-    func leftImageLoaded(_ image: UIImage?) {
+    func imageLoaded(index: Int, image: UIImage?) {
         DispatchQueue.main.async {
-            self.view?.configLeftSide(image, self.leftHit?.tags)
+            self.view?.config(index: index, image: image, text: self.hits[safe: index]??.tags)
         }
     }
-    func rightImageLoaded(_ image: UIImage?) {
-        DispatchQueue.main.async {
-            self.view?.configRightSide(image, self.rightHit?.tags)
-        }
-    }
-}
 
-private extension MainScreenCellPresenter {
-    func updateLeft() {
-        DispatchQueue.main.async {
-            self.view?.configLeftSide(nil, self.leftHit?.tags)
-        }
-    }
-    func updateRight() {
-        DispatchQueue.main.async {
-            self.view?.configRightSide(nil, self.rightHit?.tags)
-        }
+    func addTask(_ task: Cancelable?) {
+        tasks.append(task)
     }
 }
 
 extension MainScreenCellPresenter: IMainScreenCellPresenter {
 
-    func leftImageTapped() {
-        guard let leftHit, let rightHit else { return }
+    func imageTapped(index: Int) {
+        let urls = hits.compactMap { $0 }.map { $0.webformatURL }
 
-        output.leftImageTapped([leftHit.webformatURL, rightHit.webformatURL])
-    }
-
-    func rightImageTapped() {
-        guard let leftHit, let rightHit else { return }
-
-        output.rightImageTapped([leftHit.webformatURL, rightHit.webformatURL])
+        output.imageTapped(index: index, imageUrls: urls)
     }
 }
 

@@ -98,10 +98,7 @@ extension MainScreenService: IMainScreenService {
         var mainCellConfigs: [MainCellConfig] = []
 
         for i in 0..<amout {
-            let config = MainCellConfig(
-                leftHit: leftHits[safe: i],
-                rightHit: rightHits[safe: i]
-            )
+            let config = MainCellConfig(hits: [leftHits[safe: i], rightHits[safe: i]])
             mainCellConfigs.append(config)
         }
 
