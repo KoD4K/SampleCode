@@ -15,11 +15,13 @@ class BaseRequest: IRequest {
 
     static let key = "38738026-cb365c92113f40af7a864c24a"
 
-    private let searchString: String
     private let pageNumber: Int
+    private let perPage: Int
+    private let searchString: String
 
-    init(pageNumber: Int, searchString: String) {
+    init(pageNumber: Int, perPage: Int, searchString: String) {
         self.pageNumber = pageNumber
+        self.perPage = perPage
         self.searchString = searchString
     }
 
@@ -32,7 +34,8 @@ class BaseRequest: IRequest {
         [
             "key": Self.key,
             "q": searchString,
-            "page": pageNumber
+            "page": pageNumber,
+            "per_page": perPage
         ]
     }
 }

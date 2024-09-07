@@ -5,10 +5,12 @@ protocol IMainScreenPresenter {
     /// - Parameter text: user's text
     func onTextFieldDidChange(with text: String)
 
-    func willDisplay(
+    func onWillDisplay(
         cell: MainScreenCell,
         withConfig config: MainCellConfig
     )
+
+    func onWillDisplayLastCell()
 }
 
 final class MainScreenPresenter {
@@ -18,15 +20,35 @@ final class MainScreenPresenter {
     private let service: IMainScreenService
     private let router: IMainScreenRouter
 
-    // Properties
-    private var currentPage = 1
-    private var totalPages = 0
+    private var isLoading = false
 
     // MARK: - Init
 
     init(router: IMainScreenRouter, service: IMainScreenService) {
         self.router = router
         self.service = service
+    }
+
+    // MARK: Private
+
+    private func handle(result: Result<MainScreenConfig, MainScreenError>) {
+        isLoading = false
+        DispatchQueue.main.async {
+            switch result {
+            case .success(let config):
+                self.view?.update(withState: .loaded(config.cellConfigs))
+            case .failure(let error):
+                if error != .noMoreData {
+                    self.view?.update(withState: .error(error))
+                }
+            }
+        }
+    }
+
+    private func loadMoreDataIfAvailable() {
+        service.loadMoreHits { [weak self] result in
+            self?.handle(result: result)
+        }
     }
 }
 
@@ -40,18 +62,11 @@ extension MainScreenPresenter: IMainScreenPresenter {
         }
 
         service.loadHits(forText: text) { [weak self] result in
-            DispatchQueue.main.async {
-                switch result {
-                case .success(let data):
-                    self?.view?.update(withState: .loaded(data))
-                case .failure(let error):
-                    self?.view?.update(withState: .error(error))
-                }
-            }
+            self?.handle(result: result)
         }
     }
 
-    func willDisplay(cell: MainScreenCell, withConfig config: MainCellConfig) {
+    func onWillDisplay(cell: MainScreenCell, withConfig config: MainCellConfig) {
         guard !config.isSkeleton else {
             DispatchQueue.main.async {
                 cell.showSkeletons()
@@ -69,13 +84,19 @@ extension MainScreenPresenter: IMainScreenPresenter {
         for (index, hit) in config.hits.enumerated() {
             guard let hit else {
                 cell.clear(index: index)
-                return
+                continue
             }
 
             let task = service.loadImage(forHit: hit) { [weak cellPresenter] image in
                 cellPresenter?.imageLoaded(index: index, image: image)
             }
             cellPresenter.addTask(task)
+        }
+    }
+    
+    func onWillDisplayLastCell() {
+        if !isLoading {
+            loadMoreDataIfAvailable()
         }
     }
 }

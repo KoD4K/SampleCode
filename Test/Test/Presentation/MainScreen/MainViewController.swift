@@ -12,7 +12,16 @@ class MainScreenViewController: UIViewController {
         static let rowHeight: CGFloat = 200
     }
 
-    enum State {
+    enum State: Equatable {
+        static func == (lhs: MainScreenViewController.State, rhs: MainScreenViewController.State) -> Bool {
+            switch (lhs, rhs) {
+            case (.empty, .empty), (.error(_), .error(_)), (.loading, .loading), (.loaded(_), .loaded(_)):
+                return true
+            default:
+                return false
+            }
+        }
+
         case empty
         case error(MainScreenError)
         case loaded([MainCellConfig])
@@ -127,14 +136,28 @@ private extension MainScreenViewController {
     }
 
     private func showData(_ data: [MainCellConfig]) {
-        configs = data
+        if currentState != .loaded([]) {
+            currentState = .loaded([])
+            configs = data
+            tableView.reloadData()
+            tableView.isHidden = false
+            tableView.isUserInteractionEnabled = true
+        } else {
+            let currentConfigsCount = configs.count
+            configs.append(contentsOf: data)
+            tableView.beginUpdates()
+            var indexPathes: [IndexPath] = []
 
-        tableView.reloadData()
-        tableView.isHidden = false
-        tableView.isUserInteractionEnabled = true
+            for i in currentConfigsCount..<configs.count {
+                indexPathes.append(IndexPath(row: i, section: 0))
+            }
+            tableView.insertRows(at: indexPathes, with: .bottom)
+            tableView.endUpdates()
+        }
     }
 
     private func showError(_ error: MainScreenError) {
+        currentState = .error(error)
         tableView.isHidden = true
         messageLabel.text = error.text
     }
@@ -163,7 +186,11 @@ extension MainScreenViewController: UITableViewDataSource {
 
         let config = configs[indexPath.row]
 
-        presenter.willDisplay(cell: cell, withConfig: config)
+        presenter.onWillDisplay(cell: cell, withConfig: config)
+
+        if indexPath.row == configs.count - 1{
+            presenter.onWillDisplayLastCell()
+        }
     }
 }
 
