@@ -11,7 +11,6 @@ final class ImageTagsView: UIView {
 
     private lazy var imageView = makeImageView()
     private lazy var tagsView = makeTagsView()
-    private(set) var image: UIImage?
 
     init() {
         super.init(frame: .zero)
@@ -24,7 +23,6 @@ final class ImageTagsView: UIView {
     }
 
     func configure(_ image: UIImage?, _ tags: String?, animation: Bool = false) {
-        self.image = image
         imageView.image = image?.withRoundedCorners(radius: Constants.cornerRadius)
         tagsView.text = tags
         
@@ -73,7 +71,7 @@ private extension ImageTagsView {
 
     func makeTagsView() -> UILabel {
         let view = UILabel()
-        view.numberOfLines = 3
+        view.numberOfLines = 2
         view.translatesAutoresizingMaskIntoConstraints = false
         return view
     }

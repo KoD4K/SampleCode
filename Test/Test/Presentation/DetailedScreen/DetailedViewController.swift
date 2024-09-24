@@ -3,7 +3,8 @@ import UIKit
 protocol IDetailedView: AnyObject {
     func update(leftImage: UIImage?)
     func update(rightImage: UIImage?)
-    func update(_ startIndex: Int)
+    func update(startIndex: Int)
+    func update(imageCounts: Int)
 }
 
 final class DetailedViewController: UIViewController {
@@ -63,22 +64,7 @@ final class DetailedViewController: UIViewController {
         pageControl.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -16).isActive = true
         pageControl.centerXAnchor.constraint(equalTo: view.centerXAnchor).isActive = true
 
-        scrollView.addSubview(leftImageView)
-        scrollView.addSubview(rightImageView)
-
         scrollView.pinToSuperviewEdges()
-
-        leftImageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true
-        leftImageView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
-        leftImageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
-        leftImageView.widthAnchor.constraint(equalToConstant: Constants.screenWidth).isActive = true
-        leftImageView.heightAnchor.constraint(equalToConstant: Constants.screenHeight).isActive = true
-        rightImageView.leadingAnchor.constraint(equalTo: leftImageView.trailingAnchor).isActive = true
-        rightImageView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
-        rightImageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
-        rightImageView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
-        rightImageView.widthAnchor.constraint(equalTo: leftImageView.widthAnchor).isActive = true
-        rightImageView.heightAnchor.constraint(equalTo: leftImageView.heightAnchor).isActive = true
 
         let swipeGesture = UISwipeGestureRecognizer()
         swipeGesture.direction = .down
@@ -102,7 +88,7 @@ private extension DetailedViewController {
     func makePageControl() -> UIPageControl {
         let control = UIPageControl()
         control.translatesAutoresizingMaskIntoConstraints = false
-        control.numberOfPages = 2
+        control.hidesForSinglePage = true
         control.currentPage = 0
         return control
     }
@@ -110,9 +96,8 @@ private extension DetailedViewController {
     func makeScrollView() -> UIScrollView {
         let view = UIScrollView()
         view.showsHorizontalScrollIndicator = false
+        view.showsVerticalScrollIndicator = false
         view.isPagingEnabled = true
-        view.contentSize = CGSize(width: view.frame.width * 2, height: view.frame.height)
-        view.showsHorizontalScrollIndicator = false
         view.delegate = self
         return view
     }
@@ -139,12 +124,39 @@ extension DetailedViewController: IDetailedView {
         rightImageView.image = rightImage
     }
 
-    func update(_ startIndex: Int) {
+    func update(startIndex: Int) {
         pageControl.currentPage = startIndex
 
         let contentOffsetPoint = CGPoint(x: Int(scrollView.frame.width) * startIndex, y: 0)
 
         scrollView.setContentOffset(contentOffsetPoint, animated: false)
+    }
+
+    func update(imageCounts: Int) {
+        pageControl.numberOfPages = imageCounts
+
+        if imageCounts == 2 {
+            scrollView.contentSize = CGSize(width: view.frame.width * 2, height: view.frame.height)
+            scrollView.addSubview(leftImageView)
+            scrollView.addSubview(rightImageView)
+
+            leftImageView.leadingAnchor.constraint(equalTo: scrollView.leadingAnchor).isActive = true
+            leftImageView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+            leftImageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+            leftImageView.widthAnchor.constraint(equalToConstant: Constants.screenWidth).isActive = true
+            leftImageView.heightAnchor.constraint(equalToConstant: Constants.screenHeight).isActive = true
+            rightImageView.leadingAnchor.constraint(equalTo: leftImageView.trailingAnchor).isActive = true
+            rightImageView.topAnchor.constraint(equalTo: scrollView.topAnchor).isActive = true
+            rightImageView.bottomAnchor.constraint(equalTo: scrollView.bottomAnchor).isActive = true
+            rightImageView.trailingAnchor.constraint(equalTo: scrollView.trailingAnchor).isActive = true
+            rightImageView.widthAnchor.constraint(equalTo: leftImageView.widthAnchor).isActive = true
+            rightImageView.heightAnchor.constraint(equalTo: leftImageView.heightAnchor).isActive = true
+        } else {
+            scrollView.removeFromSuperview()
+
+            view.addSubview(leftImageView)
+            leftImageView.pinToSuperviewEdges()
+        }
     }
 }
 

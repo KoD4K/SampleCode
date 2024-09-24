@@ -1,17 +1,15 @@
 import UIKit
 
 protocol IMainScreenCellOutput {
-    func imageTapped(index: Int, imageUrls:[URL])
+    func showDetailedScreen(withConfiguration config: DetailedScreenConfiguration)
 }
 
 protocol IMainScreenCellView: AnyObject {
-    func config(index: Int, image: UIImage?, text: String?)
+    func config(withConfiguration config: MainScreenCell.Configuration)
     func clear(index: Int)
 }
 
 final class MainScreenCell: UITableViewCell {
-    
-    var presenter: IMainScreenCellPresenter?
 
     enum Constants {
         static let spaceBetween: CGFloat = 10
@@ -19,6 +17,9 @@ final class MainScreenCell: UITableViewCell {
     }
 
     static let reuseIdentifier = String(describing: MainScreenCell.self)
+
+    // Dependencies
+    var presenter: IMainScreenCellPresenter?
 
     // UI elements
     private lazy var horizontalStackView = makeStackView()
@@ -67,12 +68,12 @@ final class MainScreenCell: UITableViewCell {
 
 extension MainScreenCell: IMainScreenCellView {
 
-    func config(index: Int, image: UIImage?, text: String?) {
-        switch index {
+    func config(withConfiguration config: Configuration) {
+        switch config.index {
         case 0:
-            leftImageTagsView.configure(image, text)
+            leftImageTagsView.configure(config.image, config.text)
         case 1:
-            rightImageTagsView.configure(image, text)
+            rightImageTagsView.configure(config.image, config.text)
         default: break
         }
     }
@@ -115,12 +116,12 @@ private extension MainScreenCell {
 
     @objc
     private func leftTapAction() {
-        presenter?.imageTapped(index: 0)
+        presenter?.imageTapped(onSide: .left)
     }
 
     @objc
     private func rightTapAction() {
-        presenter?.imageTapped(index: 1)
+        presenter?.imageTapped(onSide: .right)
     }
 }
 
@@ -135,5 +136,27 @@ private extension MainScreenCell {
         stackView.distribution = .fillEqually
         stackView.spacing = Constants.spaceBetween
         return stackView
+    }
+}
+
+// MARK: - Workspace
+
+extension MainScreenCell {
+
+    enum Side {
+        case left
+        case right
+    }
+
+    final class Configuration {
+        let index: Int
+        let image: UIImage?
+        let text: String?
+
+        init(index: Int, image: UIImage? = nil, text: String? = nil) {
+            self.index = index
+            self.image = image
+            self.text = text
+        }
     }
 }

@@ -103,10 +103,10 @@ extension MainScreenPresenter: IMainScreenPresenter {
 
 extension MainScreenPresenter: IMainScreenCellOutput {
 
-    func imageTapped(index: Int, imageUrls: [URL]) {
+    func showDetailedScreen(withConfiguration config: DetailedScreenConfiguration) {
         let config = DetailedScreenConfiguration(
-            imageUrls: imageUrls,
-            startIndex: index
+            imageUrls: config.imageUrls,
+            startIndex: config.startIndex
         )
         router.showDetailedScreen(withConfig: config)
     }

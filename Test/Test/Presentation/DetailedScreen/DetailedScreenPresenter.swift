@@ -11,7 +11,7 @@ final class DetailedScreenPresenter {
     private let configuration: DetailedScreenConfiguration
     private let network: INetworkService
 
-    // MARK: - Init
+    // MARK: Init
 
     init(configuration: DetailedScreenConfiguration, network: INetworkService) {
         self.configuration = configuration
@@ -37,6 +37,8 @@ final class DetailedScreenPresenter {
 extension DetailedScreenPresenter: IDetailedScreenPresenter {
 
     func onViewWillAppear() {
+        view?.update(imageCounts: configuration.imageUrls.count)
+        
         for (index, url) in configuration.imageUrls.enumerated() {
             network.loadImage(url) { [weak self] result in
                 switch result {
@@ -50,6 +52,6 @@ extension DetailedScreenPresenter: IDetailedScreenPresenter {
     }
 
     func onViewDidLayoutSubviews() {
-        view?.update(configuration.startIndex)
+        view?.update(startIndex: configuration.startIndex)
     }
 }
