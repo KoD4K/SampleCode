@@ -14,6 +14,7 @@ final class SampleCodeUnitTests: XCTestCase {
     }
 
     func testExample2() throws {
+        XCTFail("Test failed")
     }
 
     func testExample3() throws {
