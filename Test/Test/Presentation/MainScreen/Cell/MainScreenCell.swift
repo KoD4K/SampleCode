@@ -16,8 +16,6 @@ final class MainScreenCell: UITableViewCell {
         static let horizontalStackViewTop: CGFloat = 10
     }
 
-    static let reuseIdentifier = String(describing: MainScreenCell.self)
-
     // Dependencies
     var presenter: IMainScreenCellPresenter?
 

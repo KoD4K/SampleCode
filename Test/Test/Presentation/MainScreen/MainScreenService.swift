@@ -169,7 +169,8 @@ extension MainScreenService: IMainScreenService {
             switch result {
             case .success(let success):
                 completion(success)
-            case .failure(let failure):
+                // TODO: - Handle failure here
+            case .failure(_):
                 completion(nil)
             }
         }

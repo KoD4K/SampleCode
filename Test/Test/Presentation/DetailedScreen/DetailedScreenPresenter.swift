@@ -44,7 +44,8 @@ extension DetailedScreenPresenter: IDetailedScreenPresenter {
                 switch result {
                 case .success(let image):
                     self?.updateImageDependOn(index: index, image: image)
-                case .failure(let failure):
+                    // TODO: - Handle failure
+                case .failure(_):
                     break
                 }
             }
