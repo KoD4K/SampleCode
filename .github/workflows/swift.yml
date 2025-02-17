@@ -40,6 +40,8 @@ jobs:
       with: 
         name: build
         path: derivedData/Build/Products/Debug-iphonesimulator/Test.app
+    - name: install fastlane & plugins
+      run: bundle install
     - name: Run unit tests
       run: bundle exec fastlane startUnitTestsLane
 
@@ -59,5 +61,7 @@ jobs:
       with: 
         name: runner
         path: derivedData/Build/Products/Debug-iphonesimulator/TestUITests-Runner.app
+    - name: install fastlane & plugins
+      run: bundle install
     - name: Run UI tests
       run: bundle exec fastlane startUITestsLane
