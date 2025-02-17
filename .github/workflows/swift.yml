@@ -9,13 +9,55 @@ on:
 
 jobs:
   build:
-
     runs-on: macos-15
-
+    
     steps:
     - uses: actions/checkout@v4
     - name: install fastlane & plugins
       run: bundle install
-    - name: Run tests
-      run: bundle exec fastlane testLane
-      # run: swift test -v
+    - name: Build
+      run: bundle exec fastlane buildLane
+    - name: Upload build
+      uses: actions/upload-artifact@v4
+      with:
+        name: build
+        path: derivedData/Build/Products/Debug-iphonesimulator/Test.app
+    - name: Upload runner
+      uses: actions/upload-artifact@v4
+      with:
+        name: runner
+        path: derivedData/Build/Products/Debug-iphonesimulator/TestUITests-Runner.app
+      
+      
+  unitTests:
+    needs: build
+    runs-on: macos-15
+    
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download build
+      uses: actions/download-artifact@v4
+      with: 
+        name: build
+        path: derivedData/Build/Products/Debug-iphonesimulator/Test.app
+    - name: Run unit tests
+      run: bundle exec fastlane startUnitTestsLane
+
+  uiTests:
+    needs: build
+    runs-on: macos-15
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Download build
+      uses: actions/download-artifact@v4
+      with: 
+        name: build
+        path: derivedData/Build/Products/Debug-iphonesimulator/Test.app
+    - name: Download runner
+      uses: actions/download-artifact@v4
+      with: 
+        name: runner
+        path: derivedData/Build/Products/Debug-iphonesimulator/TestUITests-Runner.app
+    - name: Run UI tests
+      run: bundle exec fastlane startUITestsLane
